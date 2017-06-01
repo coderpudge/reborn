@@ -1,0 +1,120 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "pullRobGetFish",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.52,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "paths": {
+      "rob": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "e277644a-ee28-4495-8522-463b9d3e925b"
+                }
+              },
+              {
+                "frame": 0.16666666666666666,
+                "value": {
+                  "__uuid__": "f92fbe7b-2ee5-429d-b546-5fa5f74a9fcc"
+                }
+              },
+              {
+                "frame": 0.3333333333333333,
+                "value": {
+                  "__uuid__": "c240f0f6-0023-4642-8930-abb28f5f92ef"
+                }
+              },
+              {
+                "frame": 0.5,
+                "value": {
+                  "__uuid__": "4fda9c11-f7ee-4bae-b6f1-d41adc588fb5"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "line": {
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "038cba04-762f-4edc-9a3b-880360369b66"
+                }
+              }
+            ]
+          }
+        },
+        "props": {
+          "active": [
+            {
+              "frame": 0,
+              "value": true
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": true
+            },
+            {
+              "frame": 0.5,
+              "value": false
+            }
+          ],
+          "rotation": [
+            {
+              "frame": 0,
+              "value": 15
+            },
+            {
+              "frame": 0.16666666666666666,
+              "value": 30
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": 40
+            }
+          ],
+          "position": [
+            {
+              "frame": 0,
+              "value": [
+                -179.4,
+                466.7
+              ]
+            },
+            {
+              "frame": 0.16666666666666666,
+              "value": [
+                -180.5,
+                464.9
+              ]
+            },
+            {
+              "frame": 0.3333333333333333,
+              "value": [
+                -180.9,
+                466.4
+              ]
+            }
+          ],
+          "anchorY": [
+            {
+              "frame": 0,
+              "value": 1
+            }
+          ]
+        }
+      }
+    }
+  },
+  "events": []
+}
