@@ -16,6 +16,8 @@ export default class game extends cc.Component {
     nodes = [];
     @property(cc.Label)
     tips = null;
+    @property(cc.Animation)
+    fishAnim = null;
 
 
     @property(cc.AnimationState)
@@ -113,7 +115,8 @@ export default class game extends cc.Component {
                 // var node = cc.Node();
                 // node.position = this.buoy.node.position;
 
-                this.createClip();
+                // this.createClip();
+                this.fishAnim.play();
                 break;
             case "pullRobNoFish":
                 this.tips.string = "fish going !";
@@ -140,9 +143,17 @@ export default class game extends cc.Component {
      * @param {*状态} flag 
      */
     showHook(flag){
-        this.buoy.node.active = flag;
-        this.sinker.node.active = flag;
-        this.hook.node.active = flag;
+        if(flag){
+            this.buoy.node.opacity = 255;
+            this.sinker.node.opacity = 255;
+            this.hook.node.opacity = 255;
+            
+        }else{
+            this.buoy.node.opacity = 0;
+            this.sinker.node.opacity = 0;
+            this.hook.node.opacity = 0;
+        }
+        
     }
     /**
      * 物理引擎开关
@@ -159,8 +170,8 @@ export default class game extends cc.Component {
         // var hookPos = this.hook.getWorldPosition();
         // var forceType = 1;
         this._data = [
-                    {x:0,y:0, delay: 10, probability:0 },
-                    {x:0,y:-800, delay: 5, probability:10 },
+                    {x:0,y:0, delay: 5, probability:0 },
+                    {x:0,y:-800, delay: 5, probability:100 },
                     {x:0,y:40, delay: 5, probability:0 },
                     {x:0,y:-800, delay: 8, probability:20 },
                     {x:0,y:30, delay: 6, probability:0 },
@@ -237,7 +248,7 @@ export default class game extends cc.Component {
      * 创建动画
      */
     createClip(){
-        var animation = this.hook.getComponent(cc.Animation);
+        var animation = this.fishAnim.getComponent(cc.Animation);
         cc.loader.loadRes("fish/baitiao/baitiao", cc.SpriteAtlas, (err, atlas) => {
             var spriteFrames = atlas.getSpriteFrames();
             

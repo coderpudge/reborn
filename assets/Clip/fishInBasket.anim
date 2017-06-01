@@ -1,0 +1,128 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "fishInBasket",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 0.88,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "props": {
+      "position": [
+        {
+          "frame": 0,
+          "value": [
+            -52,
+            336
+          ],
+          "motionPath": [
+            [
+              -158,
+              347,
+              -109,
+              388,
+              -197,
+              289
+            ],
+            [
+              -194,
+              256,
+              -180,
+              315,
+              -204,
+              136
+            ]
+          ]
+        },
+        {
+          "frame": 0.8333333333333334,
+          "value": [
+            -204,
+            77
+          ],
+          "motionPath": []
+        }
+      ]
+    },
+    "paths": {
+      "fish": {
+        "props": {
+          "active": [
+            {
+              "frame": 0,
+              "value": false
+            },
+            {
+              "frame": 0.03333333333333333,
+              "value": true
+            },
+            {
+              "frame": 0.8333333333333334,
+              "value": true
+            },
+            {
+              "frame": 0.8666666666666667,
+              "value": false
+            }
+          ]
+        },
+        "comps": {
+          "cc.Sprite": {
+            "spriteFrame": [
+              {
+                "frame": 0,
+                "value": {
+                  "__uuid__": "310b55c4-de57-460c-83a1-13960ae54c29"
+                }
+              },
+              {
+                "frame": 0.08333333333333333,
+                "value": {
+                  "__uuid__": "72a7f496-34ab-4864-9030-3db26fee8826"
+                }
+              },
+              {
+                "frame": 0.23333333333333334,
+                "value": {
+                  "__uuid__": "c22ecfa1-b834-4953-94c2-51de4f608435"
+                }
+              },
+              {
+                "frame": 0.31666666666666665,
+                "value": {
+                  "__uuid__": "93266931-e1eb-419e-991b-b57a0268ec84"
+                }
+              },
+              {
+                "frame": 0.4,
+                "value": {
+                  "__uuid__": "310b55c4-de57-460c-83a1-13960ae54c29"
+                }
+              },
+              {
+                "frame": 0.48333333333333334,
+                "value": {
+                  "__uuid__": "72a7f496-34ab-4864-9030-3db26fee8826"
+                }
+              },
+              {
+                "frame": 0.6666666666666666,
+                "value": {
+                  "__uuid__": "c22ecfa1-b834-4953-94c2-51de4f608435"
+                }
+              },
+              {
+                "frame": 0.8666666666666667,
+                "value": {
+                  "__uuid__": "93266931-e1eb-419e-991b-b57a0268ec84"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "events": []
+}
