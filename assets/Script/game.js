@@ -1,4 +1,4 @@
-import {fishData} from "./config/fish.js";
+import fishData from "./config/fish.js";
 import {eatAnimData} from "./config/eatAnim.js"
 
 const {ccclass, property} = cc._decorator;

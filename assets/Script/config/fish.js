@@ -1,4 +1,4 @@
-export var fishData = [
+var fishData = [
     {name:"fish/baitiao", frames:5},
     {name:"fish/baitiao2", frames:5},
     {name:"fish/bianyu", frames:5},
@@ -21,3 +21,5 @@ export var fishData = [
     {name:"fish/wugui", frames:1},
     {name:"fish/wuyu", frames:1},
 ];
+
+export default fishData
