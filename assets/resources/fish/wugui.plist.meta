@@ -1,0 +1,34 @@
+{
+  "ver": "1.2.4",
+  "uuid": "4c0780d3-a446-40c8-9a7d-1b66d3e2e3f6",
+  "rawTextureUuid": "35120c57-41cc-4c1f-aea7-d44c1fb990cf",
+  "size": {
+    "width": 128,
+    "height": 256
+  },
+  "type": "Texture Packer",
+  "subMetas": {
+    "wugui.png": {
+      "ver": "1.0.3",
+      "uuid": "4fed5ce9-7ee1-4974-b0c2-faeb7c188bf0",
+      "rawTextureUuid": "35120c57-41cc-4c1f-aea7-d44c1fb990cf",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 1,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 92,
+      "height": 168,
+      "rawWidth": 100,
+      "rawHeight": 168,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "spriteType": "normal",
+      "subMetas": {}
+    }
+  }
+}

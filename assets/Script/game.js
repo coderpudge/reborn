@@ -1,3 +1,6 @@
+import {fishData} from "./config/fish.js";
+import {eatAnimData} from "./config/eatAnim.js"
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
@@ -13,11 +16,13 @@ export default class game extends cc.Component {
     @property(cc.RigidBody)
     hook = null;
     @property(cc.Node)
-    nodes = [];
+    water = null;
     @property(cc.Label)
     tips = null;
     @property(cc.Animation)
     fishAnim = null;
+    @property(cc.Node)
+    nodes = [];
 
 
     @property(cc.AnimationState)
@@ -53,12 +58,16 @@ export default class game extends cc.Component {
             self.robControl();
         }, self);
         self.rob.on('finished',  self.onFinished,self);
-        self.onRegisteredEvent();
+        /**
+         * test
+         */
+        // self.onRegisteredEvent();
     }
     /**
      * 鱼竿操作
      */
     robControl(){
+        // this.updateFluidArea(100);
         this.hook.node.stopAllActions();
         if(this._robState == 0){
             cc.log("push")
@@ -112,11 +121,9 @@ export default class game extends cc.Component {
                 break;
             case "pullRobGetFish":
                 this.tips.string = "catch fish !";
-                // var node = cc.Node();
-                // node.position = this.buoy.node.position;
-
-                // this.createClip();
-                this.fishAnim.play();
+                this.fishAnim.playAdditive("fishInBasket");
+                var fishType = this.getFishData();
+                this.createFishJumpClip(fishType.name,fishType.frames);
                 break;
             case "pullRobNoFish":
                 this.tips.string = "fish going !";
@@ -132,10 +139,16 @@ export default class game extends cc.Component {
         this._dataIdx = 0;
         this._dataObj = null;
         this._forceTime = 0;
-
+        
         this.buoy.node.position = this._buoyPos;
         this.sinker.node.position = this._sinkerPos;
         this.hook.node.position = this._hookPos;
+        //随机位置
+        var rdmx = Math.random()*200 - 100;
+        this.buoy.node.x = rdmx;
+        this.sinker.node.x = rdmx;
+        this.hook.node.x = rdmx;
+
         this.showHook(true)
     }
     /**
@@ -153,8 +166,8 @@ export default class game extends cc.Component {
             this.sinker.node.opacity = 0;
             this.hook.node.opacity = 0;
         }
-        
     }
+
     /**
      * 物理引擎开关
      * @param {*开关} flag 
@@ -169,20 +182,8 @@ export default class game extends cc.Component {
     eat(key){
         // var hookPos = this.hook.getWorldPosition();
         // var forceType = 1;
-        this._data = [
-                    {x:0,y:0, delay: 5, probability:0 },
-                    {x:0,y:-800, delay: 5, probability:100 },
-                    {x:0,y:40, delay: 5, probability:0 },
-                    {x:0,y:-800, delay: 8, probability:20 },
-                    {x:0,y:30, delay: 6, probability:0 },
-                    {x:0,y:-800, delay:6, probability:80 },
-                    {x:0,y:90, delay:2, probability:0 },
-                    {x:0,y:-1000, delay:9, probability:100 },
-                    {x:0,y:80, delay:5, probability:100 },
-                ];
+        this._data = this.getEatAnimData();
         var vector = cc.v2(-100,-100);
-        // var key = 1
-        cc.log(key)
         switch (key) {
             case 1:
                 var seqArray = [];
@@ -201,7 +202,7 @@ export default class game extends cc.Component {
                 this.hook.node.runAction(seq);
                 //在刚体上施加vector压力。
                 //body.GetWorldCenter()方法用来获取刚体的重心
-                this.hook.applyForce(cc.v2(0,-800), this.hook.getWorldCenter());
+                // this.hook.applyForce(cc.v2(0,-800), this.hook.getWorldCenter());
                 break;
             case 2:
                 //为刚体添加速度
@@ -215,7 +216,10 @@ export default class game extends cc.Component {
                 break;
         }			
     }
-    setDataIdx(idx){
+    /**
+     * 设置当前鱼吃钩动作索引
+     */
+    setDataIdx(){
         this._dataIdx = this._dataIdx || 0;
         cc.log("setIdx:",this._dataIdx);
         this._dataObj = this._data[this._dataIdx];
@@ -225,42 +229,68 @@ export default class game extends cc.Component {
             this._dataIdx += 1;
         }
     }
-    onRegisteredEvent() {
-        for (var i = 0; i < this.nodes.length; ++i) {
-            this.nodes[i].on(cc.Node.EventType.TOUCH_END, this.onButtonEnter.bind(this));
-        }
-    }
 
-    onButtonEnter(event) {
-        switch (event.target._name) {
-            case "f1":
-                this.eat(1);
-                break;
-            case "f2":
-                this.eat(2);
-                break;
-            case "f3":
-                this.eat(3);    
-                break;
-        }
+    /**
+     * 获取随机鱼品种的数据
+     */
+    getFishData(){
+        var rdm = this.getRandomInt(0,fishData.length-1);
+        return fishData[rdm];
     }
+    /**
+     * 获取随机 鱼咬钩动作的数据
+     */
+     getEatAnimData(){
+         var rdm = this.getRandomInt(0,eatAnimData.length-1);
+        return eatAnimData[rdm];
+     }
+     /**
+      * 返回一个介于min和max之间的整型随机数
+      * @param {*最小值} min 
+      * @param {*最大值} max 
+      */
+     getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+     }
+
     /**
      * 创建动画
      */
-    createClip(){
+    createFishJumpClip(name,count){
         var animation = this.fishAnim.getComponent(cc.Animation);
-        cc.loader.loadRes("fish/baitiao/baitiao", cc.SpriteAtlas, (err, atlas) => {
+        cc.loader.loadRes(name, cc.SpriteAtlas, (err, atlas) => {
             var spriteFrames = atlas.getSpriteFrames();
-            
-            var clip = cc.AnimationClip.createWithSpriteFrames(spriteFrames, 4);
-            clip.name = 'run';
+            var clip = cc.AnimationClip.createWithSpriteFrames(spriteFrames, count);
+            clip.name = 'fishJump';
             clip.wrapMode = cc.WrapMode.Loop;
 
             animation.addClip(clip);
-            animation.play('run');
+            animation.playAdditive('fishJump');
         });
     }
+    /**
+     * 
+     * @param {*渔具类型：鱼竿 鱼漂 铅坠 鱼钩} gearType 
+     * @param {*渔具ID：光威鱼竿ID 达亿瓦鱼竿ID 伊豆鱼钩4#ID} gearId 
+     */
+    changeGear(gearType,gearId){
 
+    }
+    /**
+     * 增加铅坠重量 （更改铅坠体积宽度）
+     * @param {*增加重量} weight 
+     */
+    changeSinker(weight){
+
+    }
+    /**
+     * 通过更改浮力水面的高度 实现甩竿远近
+     * @param {*浮力水面的高度} height 
+     */
+    updateFluidArea(height){
+        this.water.height = height;
+        // this.water.setContentSize(this.water.width, height);
+    }
     update(dt) {
         if (this._forceTime > 0) {
             cc.log("move");
@@ -268,4 +298,26 @@ export default class game extends cc.Component {
             this.hook.applyForce(cc.v2(this._dataObj.x, this._dataObj.y), this.hook.getWorldCenter());
         }
     }
+    /**
+     * test function
+     */
+    // onRegisteredEvent() {
+    //     for (var i = 0; i < this.nodes.length; ++i) {
+    //         this.nodes[i].on(cc.Node.EventType.TOUCH_END, this.onButtonEnter.bind(this));
+    //     }
+    // }
+
+    // onButtonEnter(event) {
+    //     switch (event.target._name) {
+    //         case "f1":
+    //             this.eat(1);
+    //             break;
+    //         case "f2":
+    //             this.eat(2);
+    //             break;
+    //         case "f3":
+    //             this.eat(3);    
+    //             break;
+    //     }
+    // }
 }

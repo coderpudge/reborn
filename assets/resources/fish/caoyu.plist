@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>frames</key>
+        <dict>
+            <key>caoyu.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,2},{98,300}}</string>
+                <key>offset</key>
+                <string>{18,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{44,0},{98,300}}</string>
+                <key>sourceSize</key>
+                <string>{150,300}</string>
+            </dict>
+        </dict>
+        <key>metadata</key>
+        <dict>
+            <key>format</key>
+            <integer>2</integer>
+            <key>realTextureFileName</key>
+            <string>caoyu.png</string>
+            <key>size</key>
+            <string>{128,512}</string>
+            <key>smartupdate</key>
+            <string>$TexturePacker:SmartUpdate:c3af7ca4bee2f93e9a49dcf998e63559:1/1$</string>
+            <key>textureFileName</key>
+            <string>caoyu.png</string>
+        </dict>
+    </dict>
+</plist>

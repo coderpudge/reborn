@@ -539,8 +539,8 @@
     "_type": 2,
     "_allowSleep": true,
     "_gravityScale": 1,
-    "_linearDamping": 0.5,
-    "_angularDamping": 0.5,
+    "_linearDamping": 0.1,
+    "_angularDamping": 0.1,
     "_linearVelocity": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -637,7 +637,7 @@
         "y": 150
       }
     ],
-    "_density": 0.5,
+    "_density": 0.3,
     "_sensor": false,
     "_friction": 0.2,
     "_restitution": 0
@@ -740,7 +740,7 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -14,
+      "x": -20.9,
       "y": 203
     },
     "_skewX": 0,
@@ -915,7 +915,7 @@
     "_scaleY": 0.5,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -42,
+      "x": -28.8,
       "y": 175
     },
     "_skewX": 0,
@@ -1265,8 +1265,10 @@
     },
     "_enabled": true,
     "density": 1,
-    "angularDrag": 2,
-    "linearDrag": 2
+    "angularDrag": 1,
+    "linearDrag": 0.8,
+    "friction": 0,
+    "restitution": 0
   },
   {
     "__type__": "cc.Widget",
@@ -1275,7 +1277,7 @@
     "node": {
       "__id__": 27
     },
-    "_enabled": false,
+    "_enabled": true,
     "isAlignOnce": true,
     "_target": null,
     "_alignFlags": 4,
@@ -1845,8 +1847,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -211,
-      "y": 50
+      "x": -220.1,
+      "y": 36.7
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1895,11 +1897,7 @@
     ],
     "_tag": -1,
     "_active": true,
-    "_components": [
-      {
-        "__id__": 50
-      }
-    ],
+    "_components": [],
     "_prefab": null,
     "_id": "956f6WZLVpAUZu9HpTQbcQb",
     "_opacity": 255,
@@ -1946,15 +1944,18 @@
     },
     "_children": [],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 49
+      },
+      {
+        "__id__": 50
       }
     ],
     "_prefab": null,
     "_id": "bdb94SO2FdHv62YNbONri6b",
-    "_opacity": 255,
+    "_opacity": 0,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -2020,16 +2021,15 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 47
+      "__id__": 48
     },
     "_enabled": true,
-    "_defaultClip": {
-      "__uuid__": "38dad237-c543-404a-8247-3f5babcdb4cc"
-    },
+    "_defaultClip": null,
     "_clips": [
       {
         "__uuid__": "38dad237-c543-404a-8247-3f5babcdb4cc"
-      }
+      },
+      null
     ],
     "playOnLoad": false
   },
@@ -2075,8 +2075,8 @@
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -213,
-      "y": 30
+      "x": -220,
+      "y": 11.9
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -2937,6 +2937,15 @@
     "hook": {
       "__id__": 20
     },
+    "water": {
+      "__id__": 27
+    },
+    "tips": {
+      "__id__": 33
+    },
+    "fishAnim": {
+      "__id__": 50
+    },
     "nodes": [
       {
         "__id__": 55
@@ -2948,12 +2957,6 @@
         "__id__": 65
       }
     ],
-    "tips": {
-      "__id__": 33
-    },
-    "fishAnim": {
-      "__id__": 50
-    },
     "_animState": null,
     "_robState": 0,
     "_buoyPos": {

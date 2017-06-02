@@ -42,7 +42,9 @@ cc.Class({
     properties: {
         density:1,
         angularDrag:1,
-        linearDrag:1
+        linearDrag:1,
+        friction:0,
+        restitution:0
     },
 
     // use this for initialization
@@ -114,6 +116,8 @@ cc.Class({
         polygonCollider.points=[cc.p(-w,-h),cc.p(w,-h),cc.p(w,h),cc.p(-w,h)];
         polygonCollider.sensor=true;
         polygonCollider.density=this.density;
+        polygonCollider.friction=this.friction;
+        polygonCollider.restitution=this.restitution;
         polygonCollider.apply();
         this.fluidBody=body._b2Body;
     },

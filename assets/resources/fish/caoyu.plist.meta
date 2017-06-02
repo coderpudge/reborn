@@ -1,0 +1,34 @@
+{
+  "ver": "1.2.4",
+  "uuid": "dc4eba44-7c85-45c3-b7c8-ed05125c8c5b",
+  "rawTextureUuid": "0ac855db-f1da-4bc0-8df7-5d50b57f0308",
+  "size": {
+    "width": 128,
+    "height": 512
+  },
+  "type": "Texture Packer",
+  "subMetas": {
+    "caoyu.png": {
+      "ver": "1.0.3",
+      "uuid": "0e9ef4ab-aebb-4fef-bb9d-cbe3aed1131c",
+      "rawTextureUuid": "0ac855db-f1da-4bc0-8df7-5d50b57f0308",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 18,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 98,
+      "height": 300,
+      "rawWidth": 150,
+      "rawHeight": 300,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "spriteType": "normal",
+      "subMetas": {}
+    }
+  }
+}

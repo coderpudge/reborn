@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>frames</key>
+        <dict>
+            <key>qingyu.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,2},{100,350}}</string>
+                <key>offset</key>
+                <string>{1,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{26,0},{100,350}}</string>
+                <key>sourceSize</key>
+                <string>{150,350}</string>
+            </dict>
+        </dict>
+        <key>metadata</key>
+        <dict>
+            <key>format</key>
+            <integer>2</integer>
+            <key>realTextureFileName</key>
+            <string>qingyu.png</string>
+            <key>size</key>
+            <string>{128,512}</string>
+            <key>smartupdate</key>
+            <string>$TexturePacker:SmartUpdate:c3f0ecb8e275fe82cdde7b5b9e7292a2:1/1$</string>
+            <key>textureFileName</key>
+            <string>qingyu.png</string>
+        </dict>
+    </dict>
+</plist>

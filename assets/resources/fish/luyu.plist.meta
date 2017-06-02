@@ -1,0 +1,34 @@
+{
+  "ver": "1.2.4",
+  "uuid": "8085af75-2207-47c2-bd43-b7e89d7caed7",
+  "rawTextureUuid": "7b6146c9-1081-4977-86d9-e6a28f32b979",
+  "size": {
+    "width": 256,
+    "height": 512
+  },
+  "type": "Texture Packer",
+  "subMetas": {
+    "luyu.png": {
+      "ver": "1.0.3",
+      "uuid": "93298fc1-0810-4c93-b64e-ba271112b1c4",
+      "rawTextureUuid": "7b6146c9-1081-4977-86d9-e6a28f32b979",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 1,
+      "offsetY": 2,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 141,
+      "height": 296,
+      "rawWidth": 151,
+      "rawHeight": 300,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "spriteType": "normal",
+      "subMetas": {}
+    }
+  }
+}
