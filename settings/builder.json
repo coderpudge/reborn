@@ -10,8 +10,8 @@
   "mergeStartScene": false,
   "oauthLoginServer": "",
   "orientation": {
-    "landscapeLeft": true,
-    "landscapeRight": true,
+    "landscapeLeft": false,
+    "landscapeRight": false,
     "portrait": true,
     "upsideDown": false
   },

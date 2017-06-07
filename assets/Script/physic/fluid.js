@@ -1,9 +1,11 @@
 
 function inside(cp1,cp2,p){
+    // cc.log("inside");
     return (cp2.x-cp1.x)*(p.y-cp1.y) > (cp2.y-cp1.y)*(p.x-cp1.x);
 }
 
 function intersection(cp1,cp2,s,e){
+    // cc.log("intersection");
     let dc = cc.p(cp1.x-cp2.x, cp1.y-cp2.y);
     let dp = cc.p(s.x-e.x, s.y-e.y);
     let n1 = cp1.x*cp2.y - cp1.y*cp2.x;
@@ -13,6 +15,7 @@ function intersection(cp1,cp2,s,e){
 }
 
 function computeAC(vs){
+    // cc.log("computeAC");
     let count=vs.length;
     var c = cc.p(0,0);
     var area = 0.0;
@@ -42,9 +45,7 @@ cc.Class({
     properties: {
         density:1,
         angularDrag:1,
-        linearDrag:1,
-        friction:0,
-        restitution:0
+        linearDrag:1
     },
 
     // use this for initialization
@@ -57,6 +58,7 @@ cc.Class({
     },
     
     findIntersectionAreaAndCentroid(body){
+        // cc.log("findIntersectionAreaAndCentroid");
         var fixtureB=body.GetFixtureList();
         if(!fixtureB||fixtureB.GetType()!==2){
             return;
@@ -107,6 +109,7 @@ cc.Class({
     },
 
     createFluid(){
+        // cc.log("createFluid");
         var body=this.node.addComponent(cc.RigidBody);
         body.type=0;
         body.enabledContactListener=true;
@@ -116,8 +119,6 @@ cc.Class({
         polygonCollider.points=[cc.p(-w,-h),cc.p(w,-h),cc.p(w,h),cc.p(-w,h)];
         polygonCollider.sensor=true;
         polygonCollider.density=this.density;
-        polygonCollider.friction=this.friction;
-        polygonCollider.restitution=this.restitution;
         polygonCollider.apply();
         this.fluidBody=body._b2Body;
     },
@@ -125,12 +126,14 @@ cc.Class({
 
 
     onBeginContact(contact, selfCollider, otherCollider) {
+        // cc.log("onBeginContact");
         let bodyB=otherCollider.body._b2Body;
         this.inFluid.push(bodyB);
         contact.disabled = true;
     },
 
     onEndContact(contact,selfCollider,otherCollider){
+        // cc.log("onEndContact");
         let bodyB=otherCollider.body._b2Body;
         let index=this.inFluid.indexOf(bodyB);
         this.inFluid.splice(index,1);
@@ -143,14 +146,29 @@ cc.Class({
             var mass=AC[0]*this.density;
             var centroid=AC[1];
             var buoyancyForce=new b2.Vec2(mass*this.gravity.x,mass*this.gravity.y);
-            body.ApplyForce(buoyancyForce,centroid);
-            var velDir=body.GetLinearVelocityFromWorldPoint(centroid).Subtract(this.fluidBody.GetLinearVelocityFromWorldPoint(centroid));
+            // cc.log("ac1",centroid)
+            body.ApplyForce(buoyancyForce,centroid,true);
+
+            // var velDir1= cc.Vec2();
+            var velDir1 = body.GetLinearVelocityFromWorldPoint(centroid);
+         
+            // var velDir2= cc.Vec2();
+            var velDir2=this.fluidBody.GetLinearVelocityFromWorldPoint(centroid);
+            // cc.log("velDir", velDir1, velDir2);
+            // var velDir = body.GetLinearVelocityFromWorldPoint(centroid).operator -=(this.fluidBody.GetLinearVelocityFromWorldPoint(centroid));
+            // var velDir = cc.Vec2();
+            var velDir = cc.pSub(velDir1,velDir2);
+            // velDir1.operator -=(velDir2);
+            // cc.log("velDir", velDir);
             var dragMag=this.density*this.linearDrag*mass;
-            var dragForce=velDir.Multiply(-dragMag);
-            body.ApplyForce(dragForce,centroid);
+            // velDir1.operator*=(-dragMag);
+            // var dragForce=velDir1;
+            var dragForce=cc.pMult(velDir,-dragMag);
+            
+            body.ApplyForce(dragForce,centroid,true);
 
             var torque=-body.GetInertia()/body.GetMass()*mass*body.GetAngularVelocity()*this.angularDrag;
-            body.ApplyTorque(torque);
+            body.ApplyTorque(torque,true);
         }
         
     },
@@ -162,6 +180,7 @@ cc.Class({
         for(var i=0;i<shape.GetVertexCount();i++){
             vertices.push(body.GetWorldPoint(shape.GetVertex(i)));
         }
+        // cc.log("getVertices",vertices.length);        
         return vertices;
     },
 

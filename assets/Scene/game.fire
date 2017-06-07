@@ -181,11 +181,11 @@
       "__id__": 3
     },
     "_enabled": true,
-    "debug": false,
+    "debug": true,
     "gravity": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -20
+      "y": -36
     }
   },
   {
@@ -664,7 +664,7 @@
       "__id__": 15
     },
     "collideConnected": false,
-    "_maxLength": 10
+    "_maxLength": 50
   },
   {
     "__type__": "cc.RigidBody",
@@ -731,8 +731,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 2,
-      "height": 10
+      "width": 5,
+      "height": 30
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -741,7 +741,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": -20.9,
-      "y": 203
+      "y": 203.31
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -761,7 +761,7 @@
     "_spriteFrame": {
       "__uuid__": "a4d4ca6d-ba6b-46bd-9674-7279e15c2f30"
     },
-    "_type": 0,
+    "_type": 1,
     "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
@@ -793,23 +793,28 @@
     "points": [
       {
         "__type__": "cc.Vec2",
-        "x": -1,
-        "y": 5
+        "x": -2.5,
+        "y": 15
       },
       {
         "__type__": "cc.Vec2",
-        "x": -1,
-        "y": -5
+        "x": -2.5,
+        "y": -15
       },
       {
         "__type__": "cc.Vec2",
-        "x": 0.94,
-        "y": -4.97
+        "x": 2.44,
+        "y": -14.88
       },
       {
         "__type__": "cc.Vec2",
-        "x": 0.94,
-        "y": 4.94
+        "x": 2.5,
+        "y": 0
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 2.24,
+        "y": 14.91
       }
     ],
     "_density": 11,
@@ -839,7 +844,7 @@
       "__id__": 20
     },
     "collideConnected": false,
-    "_maxLength": 40
+    "_maxLength": 10
   },
   {
     "__type__": "cc.RigidBody",
@@ -1043,8 +1048,13 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": 19,
-        "y": -31
+        "x": 18.6,
+        "y": -27.6
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 19.2,
+        "y": 5
       },
       {
         "__type__": "cc.Vec2",
@@ -1062,7 +1072,7 @@
         "y": 38
       }
     ],
-    "_density": 1,
+    "_density": 3,
     "_sensor": false,
     "_friction": 0.2,
     "_restitution": 0
@@ -1265,10 +1275,8 @@
     },
     "_enabled": true,
     "density": 1,
-    "angularDrag": 1,
-    "linearDrag": 0.8,
-    "friction": 0,
-    "restitution": 0
+    "angularDrag": 0.9,
+    "linearDrag": 0.99
   },
   {
     "__type__": "cc.Widget",

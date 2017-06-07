@@ -187,14 +187,26 @@ export default class game extends cc.Component {
         switch (key) {
             case 1:
                 var seqArray = [];
-                for(let obj of this._data){
+                cc.log("eatAnim:",this._data);
+                // for(let obj of this._data){
+                //     // this._dataIdx = index;
+                //     // this._dataObj = obj;
+
+                //     let setIdxFunc = cc.callFunc(this.setDataIdx, this);
+                //     seqArray.push(setIdxFunc);
+
+                //     let delay = cc.delayTime(obj.delay);
+                //     seqArray.push(delay);
+                   
+                // }
+                for( var i = 0 ;i< this._data.length ;i++){
                     // this._dataIdx = index;
                     // this._dataObj = obj;
 
                     let setIdxFunc = cc.callFunc(this.setDataIdx, this);
                     seqArray.push(setIdxFunc);
 
-                    let delay = cc.delayTime(obj.delay);
+                    let delay = cc.delayTime(this._data[i].delay);
                     seqArray.push(delay);
                    
                 }
