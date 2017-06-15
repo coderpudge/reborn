@@ -194,6 +194,7 @@ float heightMapTracing(vec3 ori, vec3 dir, out vec3 p) {
 
 // main
 void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
+    float x = iDate.x;
 	vec2 uv = fragCoord.xy / iResolution.xy;
     uv = uv * 2.0 - 1.0;
     uv.x *= iResolution.x / iResolution.y;    

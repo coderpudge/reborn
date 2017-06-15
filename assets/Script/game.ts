@@ -1,4 +1,4 @@
-import fishData from "./config/fish.js";
+import {fishData} from "./config/fish.js";
 import {eatAnimData} from "./config/eatAnim.js"
 
 const {ccclass, property} = cc._decorator;
@@ -27,21 +27,21 @@ export default class game extends cc.Component {
 
     @property(cc.AnimationState)
     _animState = null;
-    @property
+    @property(Number)
     _robState = 0;
-    @property
+    @property(cc.Vec2)
     _buoyPos = cc.v2();
-    @property
+    @property(cc.Vec2)
     _sinkerPos = cc.v2();
-    @property
+    @property(cc.Vec2)
     _hookPos = cc.v2();
-    @property
+    @property(Number)
     _forceTime = 0;
-    @property
+    @property(Number)
     _data = [];
-    @property
+    @property(Number)
     _dataIdx = null;
-    @property
+    @property(Object)
     _dataObj = null;
 
 
@@ -90,6 +90,9 @@ export default class game extends cc.Component {
      */
     pull(){
         this.showHook(false);
+        if (this._dataObj==null) {
+            this.getNoFish(); 
+        }
         // this.physicSwitch(false);
         var rdm = Math.random()*100;
         cc.log(rdm);
@@ -246,6 +249,7 @@ export default class game extends cc.Component {
      * 获取随机鱼品种的数据
      */
     getFishData(){
+        cc.log("fishData",fishData);
         var rdm = this.getRandomInt(0,fishData.length-1);
         return fishData[rdm];
     }
@@ -305,7 +309,7 @@ export default class game extends cc.Component {
     }
     update(dt) {
         if (this._forceTime > 0) {
-            cc.log("move");
+            // cc.log("move");
             this._forceTime -= dt;
             this.hook.applyForce(cc.v2(this._dataObj.x, this._dataObj.y), this.hook.getWorldCenter());
         }
