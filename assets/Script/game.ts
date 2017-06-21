@@ -1,5 +1,6 @@
 import {fishData} from "./config/fish.js";
-import {eatAnimData} from "./config/eatAnim.js"
+import {eatAnimData} from "./config/eatAnim.js";
+import {FishingLocation} from "./FishingLocation";
 
 const {ccclass, property} = cc._decorator;
 
@@ -43,7 +44,8 @@ export default class game extends cc.Component {
     _dataIdx = null;
     @property(Object)
     _dataObj = null;
-
+    @property(FishingLocation)
+    _locationManager:FishingLocation;
 
     onLoad(){
         this._buoyPos = this.buoy.node.position;
@@ -62,6 +64,9 @@ export default class game extends cc.Component {
          * test
          */
         // self.onRegisteredEvent();
+       
+        
+        FishingLocation.init();
     }
     /**
      * 鱼竿操作

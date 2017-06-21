@@ -1,0 +1,6 @@
+
+{
+    "1":{"id":1,"name":"白条","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1},
+    "2":{"id":2,"name":"鲫鱼","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1},
+    "3":{"id":3,"name":"鲤鱼","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1}
+}
