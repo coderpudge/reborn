@@ -3110,6 +3110,8 @@
     "_forceTime": 0,
     "_data": [],
     "_dataIdx": null,
-    "_dataObj": null
+    "_dataObj": null,
+    "_fishDefaultAnim": [],
+    "_eatAnim": []
   }
 ]

@@ -1,6 +1,6 @@
-import {fishData} from "./config/fish.js";
-import {eatAnimData} from "./config/eatAnim.js";
-import {FishingLocation} from "./FishingLocation";
+// import {fishData} from "./config/fish.js";
+// import {eatAnimData} from "./config/eatAnim.js";
+import {DataManager} from "./game/DataManager";
 
 const {ccclass, property} = cc._decorator;
 
@@ -44,10 +44,13 @@ export default class game extends cc.Component {
     _dataIdx = null;
     @property(Object)
     _dataObj = null;
-    @property(FishingLocation)
-    _locationManager:FishingLocation;
+    @property([String])
+    _fishDefaultAnim = [];
+    @property([String])
+    _eatAnim = [];
 
     onLoad(){
+        DataManager.init();
         this._buoyPos = this.buoy.node.position;
         this._sinkerPos = this.sinker.node.position;
         this._hookPos = this.hook.node.position;
@@ -66,7 +69,10 @@ export default class game extends cc.Component {
         // self.onRegisteredEvent();
        
         
-        FishingLocation.init();
+        
+        this._fishDefaultAnim = DataManager.getBaseData("fishDefaultAnim",null);
+        this._eatAnim = DataManager.getBaseData("eatAnim",null);
+        
     }
     /**
      * 鱼竿操作
@@ -130,7 +136,7 @@ export default class game extends cc.Component {
             case "pullRobGetFish":
                 this.tips.string = "catch fish !";
                 this.fishAnim.playAdditive("fishInBasket");
-                var fishType = this.getFishData();
+                var fishType = this.getfishDefaultAnim();
                 this.createFishJumpClip(fishType.name,fishType.frames);
                 break;
             case "pullRobNoFish":
@@ -253,17 +259,23 @@ export default class game extends cc.Component {
     /**
      * 获取随机鱼品种的数据
      */
-    getFishData(){
-        cc.log("fishData",fishData);
-        var rdm = this.getRandomInt(0,fishData.length-1);
-        return fishData[rdm];
+    getfishDefaultAnim(){
+        if(this._fishDefaultAnim == null || this._fishDefaultAnim == undefined){
+            this._fishDefaultAnim = DataManager.getBaseData("fishDefaultAnim",null);
+        }
+        cc.log("fishDefaultAnim",this._fishDefaultAnim);
+        var rdm = this.getRandomInt(0,this._fishDefaultAnim.length-1);
+        return this._fishDefaultAnim[rdm];
     }
     /**
      * 获取随机 鱼咬钩动作的数据
      */
      getEatAnimData(){
-         var rdm = this.getRandomInt(0,eatAnimData.length-1);
-        return eatAnimData[rdm];
+         if(this._eatAnim == null || this._eatAnim == undefined){
+            this._eatAnim = DataManager.getBaseData("eatAnim",null);
+        }
+         var rdm = this.getRandomInt(0,this._eatAnim.length-1);
+        return this._eatAnim[rdm];
      }
      /**
       * 返回一个介于min和max之间的整型随机数
@@ -317,6 +329,9 @@ export default class game extends cc.Component {
             // cc.log("move");
             this._forceTime -= dt;
             this.hook.applyForce(cc.v2(this._dataObj.x, this._dataObj.y), this.hook.getWorldCenter());
+        }
+        if(DataManager.getFishLocation(1) == null){
+            DataManager.createFishAIByLocation(1);
         }
     }
     /**
