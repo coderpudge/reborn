@@ -57,4 +57,46 @@ export class Utils {
             }
             return o;
       }
+
+/**
+ * ======================string 字符串处理 分割=================
+ */
+      /** 
+      * 字符串处理函数 
+      */ 
+      // static StringBuffer() { 
+      //       var arr = new Array; 
+      //       this.append = function(str) { 
+      //             arr[arr.length] = str; 
+      //       }; 
+
+      //       this.toString = function() { 
+      //             return arr.join("");//把append进来的数组ping成一个字符串 
+      //       }; 
+      // } 
+
+      
+      /** 
+      *把数组转换成特定符号分割的字符串 
+      */ 
+      static arrayToString(arr,separator) { 
+            if(!separator) separator = "";//separator为null则默认为空 
+            return arr.join(separator); 
+      } 
+
+      /** 
+      * 查找数组包含的字符串 
+      */ 
+      static arrayFindString(arr,string) { 
+            var str = arr.join(""); 
+            return str.indexOf(string); 
+      } 
+
+      static sleep(time){
+            cc.log("sleep ...");
+            var start = Date.now();
+            while(Date.now() - start < time * 1000) { // delay 1 sec
+                ;
+            }
+      }
 }

@@ -1,4 +1,5 @@
 import { Utils } from "../utils/Utils";
+import { get } from '../../../creator.d';
 
 const { ccclass, property } = cc._decorator;
 
@@ -34,22 +35,41 @@ enum bagType {
 
 }
 
+// 常量系数
+var constant = {
+    distanceRate : 0.5
+}
 
 @ccclass
 export class DataManager {
-
-    static _baseConfigData = {};
+    // 已缓存的配置文件目录
     static _configCache = {};
-    static _fishLocation = [];
+    // 已加载的配置文件数据
+    static _baseConfigData = {};
+    // 鱼塘信息
+    static _fishLocation = {};
+    // 已等待进食的鱼群
     static _preparedFish = [];
+    // 背包
     static _bag = {};
+    /**
+     * 窝料 
+     * {
+     *      1:{nestLure:诱惑力, startTime:使用时间, duration:使用时长}      鱼塘 id(locationId) 
+     *      2:{nestLure:诱惑力, startTime:使用时间, duration:使用时长}      鱼塘 id(locationId) 
+     * }
+     */ 
+    static _nestBait = {};
+    // 资源是否已加载完成
     static _loadConfig = false;
+    static _resLen = 0;
     static jsonRes = [
         "location",
         "fishType",
         "eatAnim",
         "fishDefaultAnim",
-        "item"
+        "item",
+        "nestBait"
     ];
 
     static init() {
@@ -57,12 +77,21 @@ export class DataManager {
             // cc.log(element);
             this.initBaseData(element);
         });
+       /*  for (var i = 0; i < 3; i++) {
+            // if (!this.isLoadConfig()) {
+                Utils.sleep(1);
+            // }else{ßß
+            //     cc.log("dataManager init success");
+            //     return;
+            // }
+        } */
+        
     }
     static testInitItem() {
         var items = this.getBaseDataItem(null);
         for (var key in items) {
             if (items.hasOwnProperty(key)) {
-                var element = items[key];ß
+                var element = items[key];
                 element["num"] = 1;
                 var cur = this._bag[element["type"]][element["id"]];
                 if (element["mult"] == 1 && cur != undefined) {
@@ -140,10 +169,15 @@ export class DataManager {
                 }
                 me._baseConfigData[df] = results;
                 me._configCache[df] = true;
+                // this._resLen ++;
                 // cc.log(df,":",results);
             });
         }
     }
+    /**
+     * 根据区域创建模拟鱼塘
+     * @param locationId 鱼塘 ID
+     */
     static createFishAIByLocation(locationId) {
         if (!this.isLoadConfig()) {
             return;
@@ -176,20 +210,27 @@ export class DataManager {
                 var resistAllure = Utils.getRandomInt(fish["resistAllure"][0], fish["resistAllure"][1]);
                 tempFish["resistAllure"] = resistAllure;
                 tempFish["uid"] = uid
-                this._fishLocation[uid] = tempFish;
+                this._fishLocation[uid+""] = tempFish;
+                tempFish = null;
             }
             index++;
         });
         cc.log("create fish count:" + uid);
-        // cc.log("location"+locationId+":",JSON.stringify(this._fishLocation));
+        cc.log("location"+locationId+":",JSON.stringify(this._fishLocation));
     }
+    /**
+     * 获取鱼塘里鱼情
+     * @param id 鱼塘 ID
+     */
     static getFishLocation(id) {
         if (!this.isLoadConfig()) {
             return false;
         }
         return this._fishLocation[id];
     }
-
+    /**
+     * 是否需要创建模拟鱼塘
+     */
     static isNeedCreate() {
         if (!this.isLoadConfig()) {
             return false;
@@ -208,21 +249,28 @@ export class DataManager {
     }
 
     static isLoadConfig() {
+        // if (this._resLen == this.jsonRes.length) {
+        //     this._loadConfig = true;
+        // }
+        // return this._loadConfig;
         if (this._loadConfig) {
             return true;
         }
         // cc.log("baseConfig",this._baseConfigData)
         var error = null;
-        this.jsonRes.forEach(key => {
-            if (!this._baseConfigData.hasOwnProperty(key)) {
-                error += key + " is not loading " || "";
+
+        for(var j = 0,len=this.jsonRes.length; j < len; j++) {
+            if (!this._baseConfigData.hasOwnProperty(this.jsonRes[j])) {
+                error = this.jsonRes[j] + " is not loading ";
+                break;
             }
-        });
+        }
+
         if (error != null) {
-            // cc.log(error);
+            cc.log(error);
             return false;
         } else {
-            // cc.log("loading success")
+            cc.log("loading success")
             this._loadConfig = true;
             return true;
         }
@@ -234,6 +282,9 @@ export class DataManager {
      * @param baitLure 饵料诱惑力
      */
     static updateDistance(dt, nestLure, baitLure) {
+        if (nestLure + baitLure <= 0) {
+            return
+        }
         var time = 1 * dt;
         var count = 0;
         var nearestDistance = null;
@@ -245,7 +296,7 @@ export class DataManager {
                 var element = this._fishLocation[key];
                 var distance = element["distance"]
                 // 单位时间的距离 =（饵料的诱惑力+窝料的诱惑力）*总距离*系数/（鱼的抗诱惑力+饵料的诱惑力+窝料的诱惑力）
-                var speed = (nestLure + baitLure) * distance * 0.5 / (element["resistAllure"] + nestLure + baitLure);
+                var speed = this.getSpeed(nestLure, baitLure,element["resistAllure"],distance);
                 if (element["distance"] > element["goneDistance"]) {
                     this._fishLocation[key]["goneDistance"] = element["goneDistance"] + speed * time;
                     if (nearestDistance == null || nearestDistance > element["distance"] - this._fishLocation[key]["goneDistance"]) {
@@ -268,18 +319,35 @@ export class DataManager {
                 }
             }
         }
-        cc.log("rm:" + rmCount + " pool count:" + (count - rmCount), "prepare:" + this._preparedFish.length, "nearestKey:" + nearestKey + " nearestSpeed:" + nearestSpeed + " nearest:" + nearestDistance);
+        // cc.log("rm:" + rmCount + " pool count:" + (count - rmCount), "prepare:" + this._preparedFish.length, "nearestKey:" + nearestKey + " nearestSpeed:" + nearestSpeed + " nearest:" + nearestDistance);
     }
 
+     /**
+     * 获取鱼的速度
+     * @param nestLure 窝料诱惑力
+     * @param baitLure 饵料诱惑力
+     * @param resist   抵抗诱惑力
+     * @param distance 距离
+     */
+    static getSpeed(nestLure, baitLure,resist,distance){
+        // 单位时间的距离 =（饵料的诱惑力+窝料的诱惑力）*总距离*系数/（鱼的抗诱惑力+饵料的诱惑力+窝料的诱惑力）
+        return (nestLure + baitLure) * distance * constant.distanceRate / (resist + nestLure + baitLure);
+    }
     /**
      * 捕获到鱼
      */
-    static catchFish(key) {
-        var fish = this._fishLocation[key]
+    static catchFish() {
+        var fish = this._preparedFish[0]
         fish["time"] = Date.now();
         this._bag[fish["type"]] = this._bag[fish["type"]] || [];
         this._bag[fish["type"]].push(fish);
-        delete this._fishLocation[key];
+        this._preparedFish.shift();
+    }
+     /**
+     * 吓跑鱼
+     */
+    static scareFish() {
+        this._preparedFish.shift();
     }
 
     /**
@@ -296,6 +364,14 @@ export class DataManager {
             }
         }
     }
+    /**
+     * 获取当前可以进食的鱼
+     */
+    static getPrepareEatFish(){
+        return this._preparedFish[0];
+    }
+
+    
 
     /*
         getTableData(tableDF,table,id)
@@ -323,4 +399,56 @@ export class DataManager {
         }
     */
 
+    /**
+     * 获取当前鱼塘的窝料
+     * @param locationId 鱼塘 id
+     */
+    static getNestBait(locationId){
+        return this._nestBait[locationId];
+    }
+
+    /**
+     *  使用窝料
+     * @param locationId 鱼塘 id
+     * @param nestId 窝料 id
+     */
+    static useNestBait(locationId,nestId){
+        this._nestBait[locationId] = {};
+        this._nestBait[locationId]["id"] = nestId;
+        this._nestBait[locationId]["startTime"] = Date.now();
+    }
+    
+    /**
+     *  替换或废除窝料
+     * @param locationId 鱼塘 id
+     * @param nestId 窝料 id
+     */
+    static replaceNestBait(locationId,nestId){
+        if (!nestId) {
+            delete(this._nestBait[locationId])
+        }else{
+            this._nestBait[locationId] = {};
+            this._nestBait[locationId]["id"] = nestId;
+            this._nestBait[locationId]["startTime"] = Date.now();
+        }
+    }
+    /**
+     * 刷新窝料
+     */
+    static updateNestBait(){
+        var nestBaitDF = this.getBaseData("nestBait",null);
+        for (var key in this._nestBait) {
+            if (this._nestBait.hasOwnProperty(key)) {
+                var baitConf = nestBaitDF[key]
+                var startTime = baitConf["startTime"];
+                var baitId = baitConf["id"];
+                var now = Date.now();
+                if ( nestBaitDF[key]["duration"] + startTime < now) {
+                     delete(this._nestBait[key]);
+                }
+            }
+        }
+    }
+
+    
 }

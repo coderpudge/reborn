@@ -44,8 +44,8 @@ cc.Class({
 
     properties: {
         density:1,
-        angularDrag:1,
-        linearDrag:1
+        linearDrag:1,
+        angularDrag:1
     },
 
     // use this for initialization
