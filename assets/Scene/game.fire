@@ -1219,7 +1219,7 @@
     "node": {
       "__id__": 13
     },
-    "_enabled": false,
+    "_enabled": true,
     "_type": 0,
     "_segements": 64,
     "_N$spriteFrame": null,
@@ -1398,7 +1398,7 @@
     },
     "_enabled": true,
     "density": 1,
-    "linearDrag": 0.8,
+    "linearDrag": 0.99,
     "angularDrag": 0.3
   },
   {

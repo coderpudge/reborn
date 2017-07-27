@@ -1,6 +1,6 @@
 
 {
-    "1":{"type":1,"name":"白条","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1, "resistAllure":[1,100], "eatFrequency":2},
-    "2":{"type":2,"name":"鲫鱼","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1, "resistAllure":[1,100], "eatFrequency":2},
-    "3":{"type":3,"name":"鲤鱼","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1, "resistAllure":[1,100], "eatFrequency":2}
+    "1":{"type":1,"name":"白条","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1, "resistAllure":[1,100], "eatFrequency":2, "tryEat":[1,100]},
+    "2":{"type":2,"name":"鲫鱼","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1, "resistAllure":[1,100], "eatFrequency":2, "tryEat":[1,100]},
+    "3":{"type":3,"name":"鲤鱼","weight":[20,200],"suctionFactor":1, "impactFactor":1, "enduranceFactor":1, "caliberFactor":1, "resistAllure":[1,100], "eatFrequency":2, "tryEat":[1,100]}
 }

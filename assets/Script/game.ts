@@ -25,6 +25,8 @@ enum eatType {
 }
 //吸力系数
 var rate_suction = 2.2;
+//试探时吸力系数
+var rate_trySuction = 1;
 //持续力系数
 var rate_impulse = 1;
 //吸力的 冲量时间系数 s
@@ -103,6 +105,7 @@ export default class game extends cc.Component {
     _immuneTime = 10 * 1000;
     //持续力 的持续时间
     _unbrokenTime = 0;
+    _isTryEat = false;
 
 
 
@@ -185,7 +188,7 @@ export default class game extends cc.Component {
         if (this._dataObj == null) {
             this.getNoFish();
         }
-        // this.physicSwitch(false);
+
         var rdm = Math.random() * 100;
         cc.log("roll",rdm);
 
@@ -236,52 +239,6 @@ export default class game extends cc.Component {
             }
         }
 
-        /* if (this._unbrokenTime >= 0) {
-            var percent = this._unbrokenTime/eatTime;
-            if (percent >= 0 && percent <= 30 ) {
-               
-            }else if(percent >= 31 && percent <= 40){
-                if (rdm <= 20) {
-                     cc.log("20%几率, 中鱼了")
-                }else{
-                    cc.log("20%几率, 没有中鱼,提竿过早")
-                }
-            }else if(percent >= 41 && percent <= 50){
-                if (rdm <= 40) {
-                     cc.log("40%几率, 中鱼了")
-                }else{
-                    cc.log("40%几率, 没有中鱼")
-                }
-            }else if(percent >= 51 && percent <= 60){
-                if (rdm <= 50) {
-                     cc.log("50%几率, 中鱼了")
-                }else{
-                    cc.log("50%几率, 没有中鱼")
-                }
-            }else if(percent >= 61 && percent <= 70){
-                if (rdm <= 60) {
-                     cc.log("60%几率, 中鱼了")
-                }else{
-                    cc.log("60%几率, 没有中鱼")
-                }
-            }else if(percent >= 71 && percent <= 80){
-                if (rdm <= 80) {
-                     cc.log("80%几率, 中鱼了")
-                }else{
-                    cc.log("80%几率, 没有中鱼")
-                }
-            }else if(percent >= 81 && percent <= 100){
-                cc.log("100%几率, 中鱼了")
-                // 判断是否要溜鱼
-                
-            }   
-        } */
-
-        // if (rdm <= this._dataObj.probability) {
-        //     this.getFish();
-        // } else {
-        //     this.getNoFish();
-        // }
     }
     getFish() {
         this._animState = this.rob.play("pullRobGetFish");
@@ -514,6 +471,9 @@ export default class game extends cc.Component {
     }
 
     progressEat() {
+        
+
+   
         cc.log("冲量开始..",new Date().getSeconds())
         //冲量阶段
         this.hook.applyLinearImpulse( this._curFishImpulse, this.hook.getWorldCenter());
@@ -532,6 +492,7 @@ export default class game extends cc.Component {
     getSuction(weight) {
         return weight * rate_suction;
     }
+    
     /**
      * 随机 ccpNormalize 冲量方向
      */
@@ -558,11 +519,17 @@ export default class game extends cc.Component {
     updateFish(fish){
         if (fish) {
             this._curFish = fish;
+            this._isTryEat = this._curFish["tryEat"] >= 80;
+            cc.log("试探判断:",this._isTryEat);
             //力
             var suction = this.getSuction(fish.weight);
             var vector = this.getVector();
-            this._curFishForce = cc.v2(vector.x * suction, vector.y * suction);
-            this._curFishImpulse = cc.v2(vector.x * suction * suctionTime, vector.y * suction * suctionTime);
+            var tryEat = rate_trySuction;
+            if (!this._isTryEat) {
+                tryEat = 1;
+            }
+            this._curFishForce = cc.v2(vector.x * suction * tryEat, vector.y * suction * tryEat);
+            this._curFishImpulse = cc.v2(vector.x * suction * tryEat * suctionTime, vector.y * suction * tryEat * suctionTime);
         }else{
             this._curFish = fish;
             this._curFishForce = cc.v2();

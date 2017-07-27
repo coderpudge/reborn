@@ -187,6 +187,7 @@ export class DataManager {
         var fishAmount = location["fishAmount"];
         var fishWeight = location["fishWeight"];
         var zone = location["zone"];
+        var tryEat = location["tryEat"];
 
         var index = 0;
         var uid = 0;
@@ -206,6 +207,9 @@ export class DataManager {
                 var distance = Utils.getRandomInt(zone[0], zone[1]);
                 tempFish["distance"] = distance;
                 tempFish["goneDistance"] = 0;
+                // 试探几率
+                var tryEat =  Utils.getRandomInt(fish["tryEat"][0], fish["tryEat"][1]);
+                tempFish["tryEat"] = tryEat;
                 //抗诱惑力
                 var resistAllure = Utils.getRandomInt(fish["resistAllure"][0], fish["resistAllure"][1]);
                 tempFish["resistAllure"] = resistAllure;
