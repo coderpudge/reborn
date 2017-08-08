@@ -35,6 +35,10 @@ var suctionTime = 1;
 var eatTime = 15;
 //抛竿,提竿 免疫上钩时间 ms
 var immuneTime = 10;
+// 是否试探的概率
+var rate_tryEat = 80;
+// 每次试探的持续时间 (s)
+var tryEatTime = 5;
 
 @ccclass
 export default class game extends cc.Component {
@@ -105,8 +109,12 @@ export default class game extends cc.Component {
     _immuneTime = 10 * 1000;
     //持续力 的持续时间
     _unbrokenTime = 0;
+    //是否试探
     _isTryEat = false;
-
+    //试探次数
+    _tryEatTimes = 0;
+    //是否档口
+    _isBlockEat = false;
 
 
     onLoad() {
@@ -519,17 +527,30 @@ export default class game extends cc.Component {
     updateFish(fish){
         if (fish) {
             this._curFish = fish;
-            this._isTryEat = this._curFish["tryEat"] >= 80;
-            cc.log("试探判断:",this._isTryEat);
+            // 1. 是否试探
+            this._isTryEat = this._curFish["tryEat"] >= rate_tryEat;
+            cc.log("是否试探:",this._isTryEat);
             //力
             var suction = this.getSuction(fish.weight);
             var vector = this.getVector();
             var tryEat = rate_trySuction;
             if (!this._isTryEat) {
                 tryEat = 1;
-            }
+            }else{
+                this._tryEatTimes = Utils.getRandomInt(1,5);
+                cc.log("试探次数:",this._tryEatTimes);
+            }            
+
             this._curFishForce = cc.v2(vector.x * suction * tryEat, vector.y * suction * tryEat);
             this._curFishImpulse = cc.v2(vector.x * suction * tryEat * suctionTime, vector.y * suction * tryEat * suctionTime);
+
+            // 2. 是否挡口 (根据 钩号 和鱼重比)
+            this._isBlockEat = Utils.getRandomInt(0,100) > 50;
+            cc.log("是否挡口(随机):",this._isBlockEat);
+            if (this._isBlockEat) {
+                
+            }
+
         }else{
             this._curFish = fish;
             this._curFishForce = cc.v2();
