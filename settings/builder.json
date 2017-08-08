@@ -3,12 +3,16 @@
   "appSecret": "",
   "excludeScenes": [],
   "includeAnySDK": false,
+  "includeSDKBox": false,
   "includeSdk": [
     "anysdk"
   ],
   "inlineSpriteFrames": true,
+  "inlineSpriteFrames_native": true,
+  "md5Cache": false,
   "mergeStartScene": false,
   "oauthLoginServer": "",
+  "optimizeHotUpdate": false,
   "orientation": {
     "landscapeLeft": false,
     "landscapeRight": false,
@@ -18,7 +22,7 @@
   "packageName": "org.cocos2d.reborn",
   "privateKey": "",
   "renderMode": "0",
-  "startScene": "4665fcce-c978-4ed9-b218-12cfccc4c790",
+  "startScene": "f35e4402-d28f-4ce9-9c0b-de9b81fca325",
   "title": "reborn",
   "webOrientation": "auto"
 }

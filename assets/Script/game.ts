@@ -362,18 +362,18 @@ export default class game extends cc.Component {
 
                 //在刚体上施加vector压力。
                 //body.GetWorldCenter()方法用来获取刚体的重心
-                // this.hook.applyForce(cc.v2(0,-800), this.hook.getWorldCenter());
+                // this.hook.applyForce(cc.v2(0,-800), this.hook.getWorldCenter(),true);
                 break;
             case 2:
                 //为刚体添加速度
-                this.hook.applyLinearImpulse(vector, this.hook.getWorldCenter());
+                this.hook.applyLinearImpulse(vector, this.hook.getWorldCenter(),true);
                 break;
             case 3:
                 //唤醒刚体
                 // this.hook.wakeUp();
                 //设置刚体的线性速度
                 // this.hook.linearVelocity = vector;
-                this.hook.applyForce(vector, this.hook.getWorldCenter());
+                this.hook.applyForce(vector, this.hook.getWorldCenter(),true);
                 break;
         }
     }
@@ -476,7 +476,7 @@ export default class game extends cc.Component {
    
         cc.log("冲量开始..",new Date().getSeconds())
         //冲量阶段
-        this.hook.applyLinearImpulse( this._curFishImpulse, this.hook.getWorldCenter());
+        this.hook.applyLinearImpulse( this._curFishImpulse, this.hook.getWorldCenter(),true);
         // Utils.sleep(suctionTime);
         setTimeout(function () {
             cc.log("time out",new Date().getSeconds())
@@ -571,7 +571,7 @@ export default class game extends cc.Component {
         if (this._curEatType == eatType.force) {
             cc.log("持续施加力..")
             // this.hook.applyForce(this._curFishForce, this.hook.getWorldCenter());
-            this.hook.applyForce(this.getImpulse(this._curFish["weight"],rate_impulse), this.hook.getWorldCenter());
+            this.hook.applyForce(this.getImpulse(this._curFish["weight"],rate_impulse), this.hook.getWorldCenter(),true);
             if(this._unbrokenTime >= 0){
                 this._unbrokenTime -= dt;
             }else{
