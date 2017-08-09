@@ -1393,8 +1393,8 @@
     },
     "_enabled": true,
     "density": 1,
-    "linearDrag": 0.99,
-    "angularDrag": 0.3
+    "linearDrag": 0.7,
+    "angularDrag": 0.7
   },
   {
     "__type__": "cc.Widget",
