@@ -11,20 +11,34 @@ const { ccclass, property } = cc._decorator;
 /**
  * 鱼竿状态
  */
-enum robStatus {
+enum robState {
     prepare = 0,
     robPush,
     robPull,
 }
-
+/**
+ * 施加力方式
+ */
 enum eatType {
     //力
     force = 0,
     //冲量
     impulse = 1
 }
+
+/**
+ * eatState
+ */
+enum eatState {
+    start = 0,
+    impulse = 1,
+    force = 2,
+    leave = 3,
+    end = 4
+}
+
 //吸力系数
-var rate_suction = 0.02;
+var rate_suction = 1.1;
 //试探时吸力系数
 var rate_trySuction = 1;
 //持续力系数
@@ -32,7 +46,7 @@ var rate_force = 1;
 //吸力的 冲量时间系数 s
 var suctionTime = 1;
 // 入口持续时间 s
-var eatTime = 10;
+var eatTime = 5;
 // 入口时间变化区间 0.8 ~ 1
 var eatTimeZome = 0.8
 //抛竿,提竿 免疫上钩时间 ms
@@ -60,6 +74,8 @@ var rate_blockEatForceTime = 0.6;
 
 // 提竿延时时间
 var delayPullTime = 0.5;
+// 吐出时间
+var spitOutTime = 1;
 
 @ccclass
 export default class game extends cc.Component {
@@ -86,7 +102,7 @@ export default class game extends cc.Component {
     // @property(cc.AnimationState)
     _animState = null;
     // @property(Number)
-    _robState = robStatus.prepare;
+    _robState = robState.prepare;
     // @property(cc.Vec2)
     _buoyPos = cc.v2();
     // @property(cc.Vec2)
@@ -143,6 +159,8 @@ export default class game extends cc.Component {
     _rateBlockEatForce = 1;
     _rateBlockEatTime = 1; 
 
+    _scheduleCount = 0;
+
 
     onLoad() {
         // DataManager.init();
@@ -196,11 +214,11 @@ export default class game extends cc.Component {
     robControl() {
         // this.updateFluidArea(100);
         this.hook.node.stopAllActions();
-        if (this._robState == robStatus.prepare) {
+        if (this._robState == robState.prepare) {
             cc.log("push")
             this.push();
-            this._robState = robStatus.robPush;
-        } else if (this._robState == robStatus.robPush) {
+            this._robState = robState.robPush;
+        } else if (this._robState == robState.robPush) {
             cc.log("pull")
             this.pull();
             this.afterPull();
@@ -219,13 +237,20 @@ export default class game extends cc.Component {
      * 起竿
      */
     pull() {
-        this.hook.applyLinearImpulse( this._curFishImpulse.mulSelf(10), this.hook.getWorldCenter(),true);
+        this.hook.applyLinearImpulse( this._curFishImpulse.mul(10), this.hook.getWorldCenter(),true);
         this.showHook(false);
         
-        if (this._dataObj == null) {
-            this.getNoFish();
-        }
+        // if (this._dataObj == null) {
+        //     this.tips.string = "没有鱼数据";
+        //     this.getNoFish();
+        //     return;
+        // }
 
+        if (this._isTryEat) {
+            this.tips.string = "鱼跑了,它在试探..";
+            this.getNoFish();
+            return;
+        }
         var rdm = Math.random() * 100;
         cc.log("roll",rdm);
 
@@ -281,7 +306,7 @@ export default class game extends cc.Component {
         this.setCurEatType(eatType.impulse);
         this._isTryEat = false;
         this._isBlockEat = false;
-        this._robState = robStatus.prepare;
+        this._robState = robState.prepare;
         
     }
     getFish() {
@@ -307,7 +332,7 @@ export default class game extends cc.Component {
                 // this.eat(1);
                 break;
             case "pullRobGetFish":
-                this.tips.string = "catch fish !";
+                // this.tips.string = "catch fish !";
                 this.fishAnim.playAdditive("fishInBasket");
                 var fishType = this.getfishDefaultAnim();
                 this.createFishJumpClip(fishType.name, fishType.frames);
@@ -315,7 +340,7 @@ export default class game extends cc.Component {
                 DataManager.catchFish();
                 break;
             case "pullRobNoFish":
-                this.tips.string = "fish going !";
+                // this.tips.string = "fish going !";
                  DataManager.scareFish();
                 break;
             default:
@@ -516,17 +541,32 @@ export default class game extends cc.Component {
 
     progressEat() {
         cc.log("冲量开始..",new Date().getSeconds())
-        //冲量阶段
-        this.hook.applyLinearImpulse( this._curFishImpulse, this.hook.getWorldCenter(),true);
-        // Utils.sleep(suctionTime);
-        setTimeout(function () {
-            cc.log("time out",new Date().getSeconds())
-            //持续力阶段
+        this._unbrokenTime = 0;
+        //试探
+        if(this._isTryEat && this._tryEatTimes > 0){
+            this.tips.string = "试探..";  
+            this._tryEatTimes --;
+            // 试 冲
+            var impulse = this._curFishImpulse.mul(this._rateTryEatForce * this._rateTryEatTime * this._rateBlockEatForce * this._rateBlockEatTime);
+            this.hook.applyLinearImpulse( impulse, this.hook.getWorldCenter(),true);
+            this.tips.string = "试探..冲";
+            cc.log("try:",this._isTryEat,"impulse:",impulse);
+            // 试 持续力
             this.setCurEatType(eatType.force);
-            // 持续时间
-            // this._unbrokenTime = eatTime;
-        }.bind(this), suctionTime * 1000 * this._rateTryEatTime * this._rateBlockEatTime); 
+            
+        }else{
+            this.tips.string = "进食..";  
+            // 结束试探
+            this.hook.applyLinearImpulse(this._curFishImpulse, this.hook.getWorldCenter(),true); 
+            this.tips.string = "冲";                       
+            cc.log("try:",this._isTryEat,"impulse:",this._curFishImpulse);
+             //持续力阶段
+            this.setCurEatType(eatType.force);
+        }
     }
+
+   
+
     /**
      * 吸力
      */
@@ -562,7 +602,7 @@ export default class game extends cc.Component {
             this._curFish = fish;
             // 1. 是否试探
             this._isTryEat = this._curFish["tryEat"] >= rate_tryEat;
-            
+            this._isTryEat = true;
             //力
             var suction = this.getSuction(fish.weight);
             var vector = this.getVector();
@@ -572,7 +612,7 @@ export default class game extends cc.Component {
             this._rateTryEatTime = this._isTryEat ? rate_tryEatForceTime : 1;
             cc.log("是否试探:",this._isTryEat,"试探力系数:"+this._rateTryEatForce,"试探时间系数:"+this._rateTryEatTime);
             if (this._isTryEat) {
-                this._tryEatTimes = Utils.getRandomInt(1,5);
+                this._tryEatTimes = Utils.getRandomInt(1,tryEatMaxTimes);
                 cc.log("试探次数:",this._tryEatTimes);
             }
 
@@ -582,9 +622,12 @@ export default class game extends cc.Component {
             this._rateBlockEatTime = this._isBlockEat ? rate_blockEatForceTime : 1;
             cc.log("是否挡口(随机):",this._isBlockEat,"挡口力系数:"+ this._rateBlockEatForce,"挡口时间系数:"+this._rateBlockEatTime);
            
-            this._curFishForce = vector.mulSelf(suction * this._rateTryEatForce * this._rateBlockEatForce)
-            this._curFishImpulse = vector.mulSelf(suctionTime * suction * this._rateTryEatForce * this._rateBlockEatForce);
+            // this._curFishForce = vector.mulSelf(suction * this._rateTryEatForce * this._rateBlockEatForce)
+            // this._curFishImpulse = vector.mulSelf(suctionTime * suction * this._rateTryEatForce * this._rateBlockEatForce);
             
+            this._curFishForce = vector.mul(suction)
+            this._curFishImpulse = vector.mul(suctionTime * suction);
+
             cc.log("鱼重",fish.weight/1000+" KG","冲量:",this._curFishImpulse,"持续力:",this._curFishForce);
             // this._curFishForce = cc.v2(vector.x * suction * tryEat, vector.y * suction * tryEat);
             // this._curFishImpulse = cc.v2(vector.x * suction * tryEat * suctionTime, vector.y * suction * tryEat * suctionTime);
@@ -594,14 +637,19 @@ export default class game extends cc.Component {
             this._curFishImpulse = cc.v2();
         }
     }
-    // 持续力的时间
-    getUnBrokenTime(){
+    // 持续力的时间(试探)
+    getUnBrokenTryTime(){
         return eatTime * this._rateTryEatTime * this._rateBlockEatTime;
+    }
+
+    // 持续力的时间(试探)
+    getUnBrokenTime(){
+        return eatTime;
     }
     updateDistance(dt) {
         // cc.log(Date.now(),dt);
         //位置更新
-        if (this._robState == robStatus.robPush ){
+        if (this._robState == robState.robPush ){
             DataManager.updateDistance(dt, this._curNestBait["allure"] || 0, this._curBaitLure)
         }
         //窝料更新
@@ -609,7 +657,7 @@ export default class game extends cc.Component {
     }
     update(dt) {
         // 抛竿后 检测鱼
-        if (this._robState == robStatus.robPush && !this._curFish) {
+        if (this._robState == robState.robPush && !this._curFish) {
 
             if (this._immuneTime > 0) {
                 this._immuneTime = this._immuneTime - dt;
@@ -631,18 +679,73 @@ export default class game extends cc.Component {
         }
         // 持续力
         if (this._curEatType == eatType.force) {
-            cc.log("持续施加力..")
-            // this.hook.applyForce(this._curFishForce, this.hook.getWorldCenter());
-            this.hook.applyForce(this._curFishForce, this.hook.getWorldCenter(),true);
-            if(this._unbrokenTime < this.getUnBrokenTime()){
+            var time = this._isTryEat ? this.getUnBrokenTryTime() : this.getUnBrokenTime();
+            if(this._unbrokenTime < time){
                 this._unbrokenTime += dt;
+                var temp = this._curFishForce.mul(this._rateTryEatForce * this._rateBlockEatForce);
+                var force = this._isTryEat ?  temp : this._curFishForce
+                this.hook.applyForce( force , this.hook.getWorldCenter(),true);
+
+                if(this._isTryEat){
+                    this.tips.string = "持续试探..",this._tryEatTimes;                
+                }else{
+                    this.tips.string = "进食中..";                
+                }
+                cc.log("try:",this._isTryEat,"持续施加力..",force, "time:",time)
             }else{
-                cc.log("停止施加持续力,类型为冲量")
                 this.setCurEatType(eatType.impulse);
-                this._unbrokenTime = 0;
+                cc.log("停止施加持续力,类型为冲量")
+                if (this._isTryEat && this._tryEatTimes > 0) {
+                    cc.log("next try");
+                    this.tips.string = "再次试探";  
+                    this.progressEat();
+                }else if(this._isTryEat && this._tryEatTimes == 0){
+                    cc.log("end try")
+                    this.tips.string = "结束试探";  
+                    this._isTryEat = false;
+                    this.progressEat();
+                }else if( !this._isTryEat ){
+                    this.tips.string = "结束进食";  
+                    cc.log("end all")
+                }
             }
         } 
        
+    }
+
+    applyForce(dt){
+        cc.log("force")
+         // 持续力
+        // if (this._curEatType == eatType.force) {
+            // cc.log("持续施加力..")
+            this._unbrokenTime += dt;
+
+            if (this._isTryEat) {
+                if(this._unbrokenTime < this.getUnBrokenTryTime()){
+                    this.hook.applyForce(this._curFishForce.mul(this._rateTryEatForce * this._rateBlockEatForce), this.hook.getWorldCenter(),true);
+                }else{
+                    this.unschedule(this.applyForce);
+                    cc.log("end schedule");
+                    setTimeout(function() {
+                        
+                        this._unbrokenTime  = 0;
+                        if (this._tryEatTimes > 0) {
+                            cc.log("next")
+                            this.tryEatAction();
+                        }
+                    }.bind(this), 1000);
+                }
+            }else{
+
+                if(this._unbrokenTime < this.getUnBrokenTime()){
+                    this.hook.applyForce(this._curFishForce, this.hook.getWorldCenter(),true);
+                }else{
+                    this.unschedule(this.applyForce);
+                    cc.log("end schedule");
+                    this._unbrokenTime  = 0;
+                }
+            }
+        // }
     }
 
     /**
