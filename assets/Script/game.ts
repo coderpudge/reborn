@@ -229,6 +229,7 @@ export default class game extends cc.Component {
      * 抛竿
      */
     push() {
+        this.tips.string = "";
         this._immuneTime = immuneTime;
         this.updateFish(null);
         this._animState = this.rob.play("pushRob");
@@ -661,16 +662,19 @@ export default class game extends cc.Component {
 
             if (this._immuneTime > 0) {
                 this._immuneTime = this._immuneTime - dt;
-                cc.log("免疫吃饵中..", this._immuneTime);
+                cc.log("鱼群免疫诱惑期..", this._immuneTime);
+                this.tips.string = "鱼群免疫诱惑期..", this._immuneTime;
                 return;
             }
             if (this._immuneTime <= 0) {
                 this._immuneTime = 0;
-                cc.log("免疫结束,正在检测鱼情");
+                cc.log("免疫诱惑结束,正在检测鱼情");
+                this.tips.string = "免疫诱惑结束,正在检测鱼情.."
             }
 
             if (DataManager.getPrepareEatFish()) {
                 cc.log("已检测到鱼");
+                this.tips.string = "已检测到附近有鱼接近..";
                 var fish = DataManager.getPrepareEatFish();
                 this.updateFish(fish);
                 // 启动吃饵过程
@@ -687,7 +691,7 @@ export default class game extends cc.Component {
                 this.hook.applyForce( force , this.hook.getWorldCenter(),true);
 
                 if(this._isTryEat){
-                    this.tips.string = "持续试探..",this._tryEatTimes;                
+                    this.tips.string = "持续试探.."+(this._tryEatTimes +1) +"次";                
                 }else{
                     this.tips.string = "进食中..";                
                 }
