@@ -233,6 +233,7 @@ export default class game extends cc.Component {
         this._immuneTime = immuneTime;
         this.updateFish(null);
         this._animState = this.rob.play("pushRob");
+       
     }
     /**
      * 起竿
@@ -359,6 +360,8 @@ export default class game extends cc.Component {
         this.buoy.node.position = this._buoyPos;
         this.sinker.node.position = this._sinkerPos;
         this.hook.node.position = this._hookPos;
+        // this.sinker.node.
+
         //随机位置
         var rdmx = Math.random() * 200 - 100;
         this.buoy.node.x = rdmx;
@@ -382,6 +385,44 @@ export default class game extends cc.Component {
             this.sinker.node.opacity = 0;
             this.hook.node.opacity = 0;
         }
+    }
+    polygonArea(points)  
+    {  
+        var i, j;  
+        var area = 0;  
+        for (i = 0; i < points.length; i++)  
+        {  
+            j = (i + 1) % points.length;  
+            area += points[i].x * points[j].y;  
+            area -= points[i].y * points[j].x;  
+        }  
+        area /= 2;  
+        return Math.abs(area);  
+    }
+    setSinkerMass(m){
+
+        var t = this.sinker.node.getComponent(cc.PhysicsPolygonCollider);
+        var b = this.sinker.node.getComponent(cc.RigidBody);
+        var area = this.polygonArea(t.points);
+        var buoy = this.buoy.node.getComponent(cc.PhysicsPolygonCollider);
+
+        cc.log("points",t.points,"density:", t.density, "mass:",b.getMass(),"area:",area/100,"mass:",area/100 * t.density);
+        cc.log("buoy: area:",this.polygonArea(buoy.points));
+        // Simulator: points (-2.50, 5.00),(-2.50, -5.00),(2.43, -4.85),(2.42, 5.11)
+        // t.points = [cc.p(-2.50, 10.00),cc.p(-2.50, -5.00),cc.p(2.43, -4.85),cc.p(2.42, 10)];
+        var w=10;
+        var nmass = m + area/100 * t.density;
+        if (nmass <= 1) {
+            this.tips.string ="不能再减了"
+            return;
+        }
+        cc.log("铅坠:"+nmass +" g");
+        this.tips.string = "铅坠:"+nmass +" g"
+        var h= nmass / t.density / (w / 10) * 10;
+        cc.log("h",h)
+        t.points=[cc.p(-w/2,-h/2),cc.p(w/2,-h/2),cc.p(w/2,h/2),cc.p(-w/2,h/2)];
+        t.apply();
+        cc.log("points",t.points)
     }
 
     /**
@@ -662,8 +703,8 @@ export default class game extends cc.Component {
 
             if (this._immuneTime > 0) {
                 this._immuneTime = this._immuneTime - dt;
-                cc.log("鱼群免疫诱惑期..", this._immuneTime);
-                this.tips.string = "鱼群免疫诱惑期..", this._immuneTime;
+                // cc.log("鱼群免疫诱惑期..", this._immuneTime);
+                // this.tips.string = "鱼群免疫诱惑期..", this._immuneTime;
                 return;
             }
             if (this._immuneTime <= 0) {
@@ -774,6 +815,12 @@ export default class game extends cc.Component {
             case "f3":
                 cc.log("f3");
                 this.eat(3);
+                break;
+            case "add1g":
+                this.setSinkerMass(1);
+                break;
+            case "sub1g":
+                this.setSinkerMass(-1);
                 break;
         }
     }
