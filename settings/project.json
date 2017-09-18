@@ -8,16 +8,16 @@
   "design-resolution-width": 640,
   "excluded-modules": [],
   "fit-height": true,
-  "fit-width": false,
+  "fit-width": true,
   "group-list": [
     "default"
   ],
   "simulator-orientation": false,
   "simulator-resolution": {
-    "height": 640,
-    "width": 960
+    "height": 1136,
+    "width": 640
   },
   "start-scene": "f35e4402-d28f-4ce9-9c0b-de9b81fca325",
-  "use-customize-simulator": false,
-  "use-project-simulator-setting": false
+  "use-customize-simulator": true,
+  "use-project-simulator-setting": true
 }

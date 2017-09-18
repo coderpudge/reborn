@@ -185,7 +185,7 @@
     "gravity": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -36
+      "y": -9.8
     }
   },
   {
@@ -388,7 +388,7 @@
     },
     "_children": [],
     "_tag": -1,
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 10
@@ -611,14 +611,14 @@
       "width": 14,
       "height": 300
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
+    "_rotationX": 90,
+    "_rotationY": 90,
     "_scaleX": 1,
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 45,
-      "y": 237
+      "x": 0,
+      "y": 80
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -664,8 +664,8 @@
     "_type": 2,
     "_allowSleep": true,
     "_gravityScale": 1,
-    "_linearDamping": 0.5,
-    "_angularDamping": 0.6,
+    "_linearDamping": 1.5,
+    "_angularDamping": 3,
     "_linearVelocity": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -686,7 +686,7 @@
     "_enabled": true,
     "tag": 0,
     "_density": 0.3,
-    "_sensor": false,
+    "_sensor": true,
     "_friction": 0.3,
     "_restitution": 0,
     "body": null,
@@ -698,12 +698,12 @@
     "points": [
       {
         "__type__": "cc.Vec2",
-        "x": 1,
-        "y": 150
+        "x": 2,
+        "y": 149.9
       },
       {
         "__type__": "cc.Vec2",
-        "x": 1,
+        "x": 2.5,
         "y": -10
       },
       {
@@ -714,7 +714,7 @@
       {
         "__type__": "cc.Vec2",
         "x": 7,
-        "y": -55
+        "y": -52
       },
       {
         "__type__": "cc.Vec2",
@@ -723,12 +723,12 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": 2,
+        "x": 0,
         "y": -150
       },
       {
         "__type__": "cc.Vec2",
-        "x": -1,
+        "x": 0,
         "y": -150
       },
       {
@@ -744,7 +744,7 @@
       {
         "__type__": "cc.Vec2",
         "x": -7,
-        "y": -51
+        "y": -52
       },
       {
         "__type__": "cc.Vec2",
@@ -784,12 +784,12 @@
     "connectedAnchor": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 4
+      "y": 15
     },
     "connectedBody": {
       "__id__": 19
     },
-    "collideConnected": true,
+    "collideConnected": false,
     "_maxLength": 150
   },
   {
@@ -803,8 +803,8 @@
     "_type": 2,
     "_allowSleep": true,
     "_gravityScale": 1,
-    "_linearDamping": 0.1,
-    "_angularDamping": 0.1,
+    "_linearDamping": 0.01,
+    "_angularDamping": 0.01,
     "_linearVelocity": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -858,16 +858,16 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 5,
-      "height": 10
+      "height": 50
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
+    "_rotationX": 2,
+    "_rotationY": 2,
     "_scaleX": 1,
     "_scaleY": 1,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 33,
-      "y": 65
+      "x": -148.8,
+      "y": -51
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -913,7 +913,7 @@
     "tag": 0,
     "_density": 11,
     "_sensor": false,
-    "_friction": 0.1,
+    "_friction": 0.01,
     "_restitution": 0,
     "body": null,
     "_offset": {
@@ -925,22 +925,22 @@
       {
         "__type__": "cc.Vec2",
         "x": -2.5,
-        "y": 5
+        "y": 25
       },
       {
         "__type__": "cc.Vec2",
         "x": -2.5,
-        "y": -5
-      },
-      {
-        "__type__": "cc.Vec2",
-        "x": 2.43,
-        "y": -4.85
+        "y": -25
       },
       {
         "__type__": "cc.Vec2",
         "x": 2.42,
-        "y": 5.11
+        "y": -24.92
+      },
+      {
+        "__type__": "cc.Vec2",
+        "x": 2.48,
+        "y": 25.03
       }
     ]
   },
@@ -954,8 +954,8 @@
     "_enabled": true,
     "anchor": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": -4
+      "x": 0.41,
+      "y": -21.36
     },
     "connectedAnchor": {
       "__type__": "cc.Vec2",
@@ -965,7 +965,7 @@
     "connectedBody": {
       "__id__": 24
     },
-    "collideConnected": true,
+    "collideConnected": false,
     "_maxLength": 10
   },
   {
@@ -979,8 +979,8 @@
     "_type": 2,
     "_allowSleep": true,
     "_gravityScale": 1,
-    "_linearDamping": 0.2,
-    "_angularDamping": 0.2,
+    "_linearDamping": 0.1,
+    "_angularDamping": 0.1,
     "_linearVelocity": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -988,7 +988,7 @@
     },
     "_angularVelocity": 0,
     "_fixedRotation": false,
-    "enabledContactListener": false,
+    "enabledContactListener": true,
     "bullet": false
   },
   {
@@ -1036,14 +1036,14 @@
       "width": 40,
       "height": 76
     },
-    "_rotationX": 0,
-    "_rotationY": 0,
+    "_rotationX": 2,
+    "_rotationY": 2,
     "_scaleX": 0.5,
     "_scaleY": 0.5,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": 7,
-      "y": 3
+      "x": -158.8,
+      "y": -100
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1089,7 +1089,7 @@
     "tag": 0,
     "_density": 9,
     "_sensor": false,
-    "_friction": 0.1,
+    "_friction": 0.01,
     "_restitution": 0,
     "body": null,
     "_offset": {
@@ -1365,7 +1365,7 @@
     "node": {
       "__id__": 32
     },
-    "_enabled": false,
+    "_enabled": true,
     "_spriteFrame": {
       "__uuid__": "a4d4ca6d-ba6b-46bd-9674-7279e15c2f30"
     },
@@ -1392,9 +1392,9 @@
       "__id__": 31
     },
     "_enabled": true,
-    "density": 1,
-    "linearDrag": 0.7,
-    "angularDrag": 0.7
+    "density": 1.2,
+    "linearDrag": 1.5,
+    "angularDrag": 1
   },
   {
     "__type__": "cc.Widget",
