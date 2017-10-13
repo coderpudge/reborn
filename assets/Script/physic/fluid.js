@@ -66,6 +66,7 @@ cc.Class({
         var centroid=cc.p(0,0);
         var area=0;
         var mass=0;
+        var intersectionPoints = [];
         while(fixtureB){
             var outputList=this.getVertices(this.fluidBody);
             var clipPolygon=this.getVertices(body);
@@ -91,6 +92,7 @@ cc.Class({
                 }
                 cp1 = cp2;
             }
+            
             let ac=computeAC(outputList);
             var density=fixtureB.GetDensity();
             mass+=ac[0]*density;
@@ -100,11 +102,12 @@ cc.Class({
             centroid.x+=ac[1].x*density;
             centroid.y+=ac[1].y*density;
             fixtureB=fixtureB.GetNext();
+            intersectionPoints = outputList;
         }
 
         centroid.mulSelf(1/mass);
-
-        return [area,centroid];
+        // cc.log("area:",area,"points:",intersectionPoints)
+        return [area,centroid,intersectionPoints];
         
     },
 
@@ -141,36 +144,60 @@ cc.Class({
     },
 
     applyBuoyancy(body){
-        var AC=this.findIntersectionAreaAndCentroid(body);//get the area and centroid
+        let AC=this.findIntersectionAreaAndCentroid(body);//get the area and centroid
         if(AC[0]!==0){
-            var mass=AC[0]*this.density;
-            var centroid=AC[1];
-            var buoyancyForce=new b2.Vec2(mass*this.gravity.x,mass*this.gravity.y);
+            let mass=AC[0]*this.density;
+            let centroid=AC[1];
+            let buoyancyForce=new b2.Vec2(mass*this.gravity.x,mass*this.gravity.y);
             // cc.log("ac1",centroid)
             body.ApplyForce(buoyancyForce,centroid,true);
 
             // var velDir1= cc.Vec2();
-            var velDir1 = body.GetLinearVelocityFromWorldPoint(centroid);
+            let velDir1 = body.GetLinearVelocityFromWorldPoint(centroid);
          
             // var velDir2= cc.Vec2();
-            var velDir2=this.fluidBody.GetLinearVelocityFromWorldPoint(centroid);
+            let velDir2=this.fluidBody.GetLinearVelocityFromWorldPoint(centroid);
             // cc.log("velDir", velDir1, velDir2);
             // var velDir = body.GetLinearVelocityFromWorldPoint(centroid).operator -=(this.fluidBody.GetLinearVelocityFromWorldPoint(centroid));
             // var velDir = cc.Vec2();
-            var velDir = cc.pSub(velDir1,velDir2);
+            let velDir = cc.pSub(velDir1,velDir2);
             // velDir1.operator -=(velDir2);
             // cc.log("velDir", velDir);
-            var dragMag=this.density*this.linearDrag*mass;
+            let dragMag=this.density*this.linearDrag*mass;
             // velDir1.operator*=(-dragMag);
             // var dragForce=velDir1;
-            var dragForce=cc.pMult(velDir,-dragMag);
+            let dragForce=cc.pMult(velDir,-dragMag);
             
             body.ApplyForce(dragForce,centroid,true);
 
-            var torque=-body.GetInertia()/body.GetMass()*mass*body.GetAngularVelocity()*this.angularDrag;
+            let torque=-body.GetInertia()/body.GetMass()*mass*body.GetAngularVelocity()*this.angularDrag;
             body.ApplyTorque(torque,true);
         }
-        
+        // if(AC[0]!==0){
+        //     let mass=AC[0]*this.density;
+        //     let centroid=AC[1];
+        //     for (let i = 0; i < AC[2].length; i++) {
+        //         let v0 = AC[2][i];
+                
+        //         let v1 = AC[2][(i+1)%AC[2].length];
+        //         let vsum = v0.add(v1);
+        //         let midPoint =  vsum.mul(0.5) ;
+        //         let velDir = body.GetLinearVelocityFromWorldPoint(midPoint);
+        //         let  vel = cc.v2(velDir.x,velDir.y).mag();
+        //         let edge = cc.pSub(v1,v0);
+        //         let edgeLength = edge.mag()
+        //         let normal = cc.v2( edge.y * -1, edge.x * 1);
+        //         let dragDot = cc.pDot(normal,velDir);
+        //         // var D = (e1X * e2Y - e1Y * e2X);
+        //         if (dragDot < 0) {
+        //             continue;
+        //         }
+        //         var dragMag = dragDot * edgeLength * this.density * vel * vel ;
+        //         var dragForce = cc.v2(velDir.x,velDir.y).mul(dragMag);
+        //         body.ApplyForce(dragForce,midPoint);
+                
+        //     }
+        // }
     },
 
 
