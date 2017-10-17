@@ -181,7 +181,7 @@
       "__id__": 3
     },
     "_enabled": true,
-    "debug": false,
+    "debug": true,
     "gravity": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -648,7 +648,7 @@
     },
     "_fillStart": 0,
     "_fillRange": 0,
-    "_isTrimmedMode": false,
+    "_isTrimmedMode": true,
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_atlas": null
@@ -665,7 +665,7 @@
     "_allowSleep": true,
     "_gravityScale": 1,
     "_linearDamping": 2,
-    "_angularDamping": 0.5,
+    "_angularDamping": 1,
     "_linearVelocity": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -2553,7 +2553,7 @@
       }
     ],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 68
@@ -2770,7 +2770,7 @@
       }
     ],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 73
@@ -2987,7 +2987,7 @@
       }
     ],
     "_tag": -1,
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 78

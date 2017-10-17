@@ -182,7 +182,7 @@ export default class game extends cc.Component {
          * test
          */
         self.onRegisteredEvent();
-
+        
 
 
         this._fishDefaultAnim = DataManager.getBaseData("fishDefaultAnim", null);
@@ -357,8 +357,11 @@ export default class game extends cc.Component {
         this._dataIdx = 0;
         this._dataObj = null;
         this._forceTime = 0;
-
+        cc.log("speed:",this.hook.linearVelocity);
+        this.hook.linearVelocity = cc.v2(0,0);
         this.showHook(true)
+        cc.log("speed:",this.hook.linearVelocity);
+
         this.buoy.node.position = this._buoyPos;
         this.sinker.node.position = this._sinkerPos;
         this.hook.node.position = this._hookPos;
@@ -448,45 +451,29 @@ export default class game extends cc.Component {
     eat(key) {
         // var hookPos = this.hook.getWorldPosition();
         // var forceType = 1;
-        this._data = this.getEatAnimData();
-        var vector = cc.v2(-300, -300);
+        // this._data = this.getEatAnimData();
+        var vector = cc.v2(0, -800);
         switch (key) {
             case 1:
-                var seqArray = [];
-                // cc.log("eatAnim:", this._data);
-                // for(let obj of this._data){
-                //     // this._dataIdx = index;
-                //     // this._dataObj = obj;
-
-                //     let setIdxFunc = cc.callFunc(this.setDataIdx, this);
-                //     seqArray.push(setIdxFunc);
-
-                //     let delay = cc.delayTime(obj.delay);
-                //     seqArray.push(delay);
-
-                // }
-
-                /* for (var i = 0; i < this._data.length; i++) {
-                    // this._dataIdx = index;
-                    // this._dataObj = obj;
-
-                    let setIdxFunc = cc.callFunc(this.setDataIdx, this);
-                    seqArray.push(setIdxFunc);
-
-                    let delay = cc.delayTime(this._data[i].delay);
-                    seqArray.push(delay);
-
-                }
-                var seq = cc.sequence(seqArray);
-                this.hook.node.runAction(seq); */
-
                 //在刚体上施加vector压力。
                 //body.GetWorldCenter()方法用来获取刚体的重心
-                // this.hook.applyForce(cc.v2(0,-800), this.hook.getWorldCenter(),true);
+                this.schedule(function(dt) {
+                   
+                    this.hook.applyForce(vector, this.hook.getWorldCenter(),true);
+                    
+               },0.01,500, 0);
                 break;
             case 2:
-                //为刚体添加速度
-                this.hook.applyLinearImpulse(vector, this.hook.getWorldCenter(),true);
+                //为刚体添加冲量速度
+                this.hook.applyLinearImpulse(vector.mulSelf(1.2), this.hook.getWorldCenter(),true);
+                this.schedule(function(dt) {
+                    // cc.log("schedule:",dt)
+                    if (this.hook.linearVelocity.y == 0) {
+                        // cc.log("vel:")
+                        // this.hook.applyForce(vector, this.hook.getWorldCenter(),true);
+                    }
+                    
+               },0.01,500, 0);
                 break;
             case 3:
                 //唤醒刚体
@@ -634,7 +621,8 @@ export default class game extends cc.Component {
         // var r3 = Math.random();
         // if (r3 < 0.8) {
             
-            return cc.v2((r1 - 0.5)*0.1, r2 - 0.5);
+            // return cc.v2((r1 - 0.5)*0.1, r2 - 0.5);
+            return cc.v2(0, Utils.getRandomInt(500,1100))
         // }else{
             
         //     return cc.v2((r1 - 0.5)*0.5, r2);
@@ -664,6 +652,7 @@ export default class game extends cc.Component {
             this._isTryEat = true;
             //力
             var suction = this.getSuction(fish.weight);
+            suction = 1;
             var vector = this.getVector();
 
             // 试探力系数
@@ -716,6 +705,7 @@ export default class game extends cc.Component {
     }
     update(dt) {
         // cc.log("hook",this.hook.node.position,"sinker",this.sinker.node.position)
+        // cc.log("speed:",this.hook.linearVelocity);
         // 抛竿后 检测鱼
         if (this._robState == robState.robPush && !this._curFish) {
 
@@ -844,6 +834,7 @@ export default class game extends cc.Component {
             case "sub1g":
                 this.setSinkerMass(-1);
                 break;
+            
         }
     }
 }

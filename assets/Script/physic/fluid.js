@@ -151,8 +151,14 @@ cc.Class({
             var mass=AC[0]*this.density;
             var centroid=AC[1];
             var buoyancyForce=new b2.Vec2(mass*this.gravity.x,mass*this.gravity.y);
+
+           
             body.ApplyForce(buoyancyForce,centroid,true);
             var velDir1=body.GetLinearVelocityFromWorldPoint(centroid);
+            if (velDir1.y == 0) {
+                cc.log("fuli:",buoyancyForce)
+                // this.hook.applyForce(vector, this.hook.getWorldCenter(),true);
+            }
             var velDir2=this.fluidBody.GetLinearVelocityFromWorldPoint(centroid);
             var velDir=cc.pSub(velDir1,velDir2);
             var dragMag=this.density*this.linearDrag*mass;
