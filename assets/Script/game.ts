@@ -160,7 +160,7 @@ export default class game extends cc.Component {
     _rateBlockEatTime = 1; 
 
     _scheduleCount = 0;
-    _buoyRotation = 10;
+    _buoyRotation = 0;
 
 
     onLoad() {

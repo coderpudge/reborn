@@ -133,6 +133,8 @@ cc.Class({
         let bodyB=otherCollider.body._b2Body;
         this.inFluid.push(bodyB);
         contact.disabled = true;
+        var worldp = contact.getWorldManifold()
+        
     },
 
     onEndContact(contact,selfCollider,otherCollider){
@@ -144,35 +146,52 @@ cc.Class({
     },
 
     applyBuoyancy(body){
-        let AC=this.findIntersectionAreaAndCentroid(body);//get the area and centroid
+        var AC=this.findIntersectionAreaAndCentroid(body);//get the area and centroid
         if(AC[0]!==0){
-            let mass=AC[0]*this.density;
-            let centroid=AC[1];
-            let buoyancyForce=new b2.Vec2(mass*this.gravity.x,mass*this.gravity.y);
-            // cc.log("ac1",centroid)
+            var mass=AC[0]*this.density;
+            var centroid=AC[1];
+            var buoyancyForce=new b2.Vec2(mass*this.gravity.x,mass*this.gravity.y);
             body.ApplyForce(buoyancyForce,centroid,true);
-
-            // var velDir1= cc.Vec2();
-            let velDir1 = body.GetLinearVelocityFromWorldPoint(centroid);
-         
-            // var velDir2= cc.Vec2();
-            let velDir2=this.fluidBody.GetLinearVelocityFromWorldPoint(centroid);
-            // cc.log("velDir", velDir1, velDir2);
-            // var velDir = body.GetLinearVelocityFromWorldPoint(centroid).operator -=(this.fluidBody.GetLinearVelocityFromWorldPoint(centroid));
-            // var velDir = cc.Vec2();
-            let velDir = cc.pSub(velDir1,velDir2);
-            // velDir1.operator -=(velDir2);
-            // cc.log("velDir", velDir);
-            let dragMag=this.density*this.linearDrag*mass;
-            // velDir1.operator*=(-dragMag);
-            // var dragForce=velDir1;
-            let dragForce=cc.pMult(velDir,-dragMag);
-            
+            var velDir1=body.GetLinearVelocityFromWorldPoint(centroid);
+            var velDir2=this.fluidBody.GetLinearVelocityFromWorldPoint(centroid);
+            var velDir=cc.pSub(velDir1,velDir2);
+            var dragMag=this.density*this.linearDrag*mass;
+            var dragForce=velDir.mulSelf(-dragMag);
             body.ApplyForce(dragForce,centroid,true);
-
-            let torque=-body.GetInertia()/body.GetMass()*mass*body.GetAngularVelocity()*this.angularDrag;
+            var torque=-body.GetInertia()/body.GetMass()*mass*body.GetAngularVelocity()*this.angularDrag;
+            // cc.log("torque:",torque)
             body.ApplyTorque(torque,true);
         }
+
+        // let AC=this.findIntersectionAreaAndCentroid(body);//get the area and centroid
+        // if(AC[0]!==0){
+        //     let mass=AC[0]*this.density;
+        //     let centroid=AC[1];
+        //     let buoyancyForce=new b2.Vec2(mass*this.gravity.x,mass*this.gravity.y);
+        //     // cc.log("ac1",centroid)
+        //     body.ApplyForce(buoyancyForce,centroid,true);
+
+        //     // var velDir1= cc.Vec2();
+        //     let velDir1 = body.GetLinearVelocityFromWorldPoint(centroid);
+         
+        //     // var velDir2= cc.Vec2();
+        //     let velDir2=this.fluidBody.GetLinearVelocityFromWorldPoint(centroid);
+        //     // cc.log("velDir", velDir1, velDir2);
+        //     // var velDir = body.GetLinearVelocityFromWorldPoint(centroid).operator -=(this.fluidBody.GetLinearVelocityFromWorldPoint(centroid));
+        //     // var velDir = cc.Vec2();
+        //     let velDir = cc.pSub(velDir1,velDir2);
+        //     // velDir1.operator -=(velDir2);
+        //     // cc.log("velDir", velDir);
+        //     let dragMag=this.density*this.linearDrag*mass;
+        //     // velDir1.operator*=(-dragMag);
+        //     // var dragForce=velDir1;
+        //     let dragForce=cc.pMult(velDir,-dragMag);
+            
+        //     body.ApplyForce(dragForce,centroid,true);
+
+        //     let torque=-body.GetInertia()/body.GetMass()*mass*body.GetAngularVelocity()*this.angularDrag;
+        //     body.ApplyTorque(torque,true);
+        // }
         // if(AC[0]!==0){
         //     let mass=AC[0]*this.density;
         //     let centroid=AC[1];
