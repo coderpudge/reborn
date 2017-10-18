@@ -468,12 +468,14 @@ export default class game extends cc.Component {
                 this.hook.applyLinearImpulse(vector.mulSelf(1.2), this.hook.getWorldCenter(),true);
                 this.schedule(function(dt) {
                     // cc.log("schedule:",dt)
-                    if (this.hook.linearVelocity.y == 0) {
-                        // cc.log("vel:")
+                    if (this.hook.linearVelocity.y <5 && this.hook.linearVelocity.y >-5 ) {
+                        cc.log("vel: 00")
+                        // this.hook.linearVelocity = cc.v2(0,0);
+                        this.hook.type = 0;
                         // this.hook.applyForce(vector, this.hook.getWorldCenter(),true);
                     }
                     
-               },0.01,500, 0);
+               },0.01,0, 0);
                 break;
             case 3:
                 //唤醒刚体

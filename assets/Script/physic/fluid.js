@@ -156,7 +156,7 @@ cc.Class({
             body.ApplyForce(buoyancyForce,centroid,true);
             var velDir1=body.GetLinearVelocityFromWorldPoint(centroid);
             if (velDir1.y == 0) {
-                cc.log("fuli:",buoyancyForce)
+                // cc.log("fuli:",buoyancyForce)
                 // this.hook.applyForce(vector, this.hook.getWorldCenter(),true);
             }
             var velDir2=this.fluidBody.GetLinearVelocityFromWorldPoint(centroid);
@@ -164,6 +164,7 @@ cc.Class({
             var dragMag=this.density*this.linearDrag*mass;
             var dragForce=velDir.mulSelf(-dragMag);
             body.ApplyForce(dragForce,centroid,true);
+
             var torque=-body.GetInertia()/body.GetMass()*mass*body.GetAngularVelocity()*this.angularDrag;
             // cc.log("torque:",torque)
             body.ApplyTorque(torque,true);
